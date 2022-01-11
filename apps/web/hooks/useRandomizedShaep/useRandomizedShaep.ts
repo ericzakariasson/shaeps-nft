@@ -1,17 +1,17 @@
 import { useInterval } from "@chakra-ui/react";
 import { useState } from "react";
-import { Shaep, SHAEP_PART_COUNT } from "../Shaep";
+import { SHAEP_PART_COUNT } from "../../components/Shaep";
 import { randomColor, randomColorIndex } from "./helpers";
 
-type RandomizedShaepProps = {
+type UseRandomizedShaepProps = {
   randomizedPartCount?: number;
   interval?: number;
 };
 
-export function RandomizedShaep({
+export function useRandomizedShaep({
   randomizedPartCount = 4,
   interval = 1000,
-}: RandomizedShaepProps) {
+}: UseRandomizedShaepProps) {
   const [colors, setColors] = useState(
     Array.from({ length: SHAEP_PART_COUNT }, randomColor)
   );
@@ -31,5 +31,5 @@ export function RandomizedShaep({
 
   useInterval(setRandomPartColor, interval);
 
-  return <Shaep colors={colors} />;
+  return { colors };
 }

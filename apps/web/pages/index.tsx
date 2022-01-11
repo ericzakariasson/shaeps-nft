@@ -10,12 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { MintForm } from "../components/MintForm";
-import { RandomizedShaep } from "../components/RandomizedShaep";
+import { Shaep } from "../components/Shaep";
+import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 
 const TOTAL_SUPPLY = 11111;
 const AMOUNT_MINTED = 3545;
 
 function Main() {
+  const { colors } = useRandomizedShaep({
+    randomizedPartCount: 3,
+    interval: 1000,
+  });
+
   return (
     <Flex
       as="main"
@@ -23,7 +29,7 @@ function Main() {
       alignItems={["unset", "unset", "flex-start"]}
     >
       <Box border="1px" flex="1" mr={["0", "0", "8"]} mb={["8", "8", "0"]}>
-        <RandomizedShaep randomizedPartCount={3} interval={1000} />
+        <Shaep colors={colors} />
       </Box>
       <Flex flex="1" direction="column">
         <Box order={[1, 1, 0]} mb={["0", "0", "4"]}>
