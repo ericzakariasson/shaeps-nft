@@ -1,6 +1,44 @@
-import { Box, Button, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Text, useToast } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useAccount, useConnect } from "wagmi";
+import { ConnectAccount } from "../ConnectAccount";
+import { ConnectedAccount } from "../ConnectedAccount";
+
+enum ConnectErrorName {
+  UserRejectedRequestError = "UserRejectedRequestError",
+}
 
 export function Header() {
+  const toast = useToast({
+    isClosable: true,
+    position: "top",
+  });
+
+  const [{ data: connectData, error: connectError }, connect] = useConnect();
+
+  const [{ data: accountData }, disconnect] = useAccount({
+    fetchEns: true,
+  });
+
+  useEffect(() => {
+    if (!connectError) return;
+
+    if (
+      connectError.name === ConnectErrorName.UserRejectedRequestError.toString()
+    ) {
+      toast({
+        title: "Wallet connection request was cancelled",
+        status: "warning",
+      });
+    } else {
+      toast({
+        title: "An error occured while connecting",
+        description: connectError.message,
+        status: "error",
+      });
+    }
+  }, [connectError, toast]);
+
   return (
     <Box mb={["4", "4", "12"]}>
       <Flex mb="2">
@@ -10,9 +48,18 @@ export function Header() {
           </Heading>
         </Box>
         <Spacer />
-        <Button bg="none" border="1px" borderRadius="0" lineHeight="2">
-          connect wallet
-        </Button>
+        {connectData.connected ? (
+          <ConnectedAccount
+            address={accountData.address}
+            ens={accountData.ens}
+            onDisconnect={disconnect}
+          />
+        ) : (
+          <ConnectAccount
+            connectors={connectData.connectors}
+            onConnect={connect}
+          />
+        )}
       </Flex>
       <Text>just some rectangles and circles, probably shaeps</Text>
     </Box>
