@@ -8,6 +8,7 @@ import {
   PopoverBody,
   Text,
 } from "@chakra-ui/react";
+import { useNetwork, chain } from "wagmi";
 
 function formatAccountAddress(address: string) {
   return `${address.substring(0, 5)}...${address.substring(
@@ -29,6 +30,24 @@ export function ConnectedAccount({
   address,
   onDisconnect,
 }: ConnectedAccountProps) {
+  const [{ data: networkData }, switchNetwork] = useNetwork();
+
+  if (networkData.chain.unsupported) {
+    return (
+      <Button
+        bg="none"
+        border="1px"
+        borderColor="indianred"
+        color="indianred"
+        borderRadius="0"
+        lineHeight="2"
+        onClick={() => switchNetwork(chain.rinkeby.id)}
+      >
+        switch network to {chain.rinkeby.name}
+      </Button>
+    );
+  }
+
   return (
     <Popover placement="top-end">
       <PopoverTrigger>
