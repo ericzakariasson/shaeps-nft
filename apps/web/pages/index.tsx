@@ -37,7 +37,7 @@ function Main() {
             what is this
           </Heading>
           <Text mb="2">
-            so, what is this even? to answer shortly, don&apos;t know. some
+            so, what is this even? to answer shortly: don&apos;t know. some
             basic shapes and some basic colors.
           </Text>
           <Text mb="4">
@@ -62,9 +62,7 @@ function Main() {
             listStylePosition="inside"
             mb="4"
           >
-            <ListItem>
-              the aquistion cost for a shaep is 1 $MATIC + gas fees
-            </ListItem>
+            <ListItem>the cost for a shaep is 1 $MATIC + gas fees</ListItem>
             <ListItem>there are a total of {TOTAL_SUPPLY} shaeps</ListItem>
           </UnorderedList>
           <MintForm totalSupply={TOTAL_SUPPLY} minted={AMOUNT_MINTED} />
