@@ -35,6 +35,7 @@ export function MintForm({ minted, totalSupply }: MintFormProps) {
             mr="2"
             flex={[1, "unset", "unset"]}
             min={0}
+            max={totalSupply - minted}
             value={amount ?? ""}
             onChange={handleChange}
           >
