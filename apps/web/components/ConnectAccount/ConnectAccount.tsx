@@ -19,19 +19,21 @@ export function ConnectAccount({ connectors, onConnect }: ConnectAccountProps) {
         connect wallet
       </MenuButton>
       <MenuList borderRadius="0">
-        {connectors.map((connector) => (
-          <MenuItem
-            _hover={{ textDecoration: "underline", bg: "none" }}
-            _expanded={{ textDecoration: "underline", bg: "none" }}
-            fontWeight="bold"
-            key={connector.id}
-            disabled={!connector.ready}
-            onClick={() => onConnect(connector)}
-          >
-            {connector.name}
-            {!connector.ready && " (unavailable)"}
-          </MenuItem>
-        ))}
+        {connectors
+          .filter((connector) => connector.ready)
+          .map((connector) => (
+            <MenuItem
+              _hover={{ textDecoration: "underline", bg: "none" }}
+              _expanded={{ textDecoration: "underline", bg: "none" }}
+              fontWeight="bold"
+              key={connector.id}
+              disabled={!connector.ready}
+              onClick={() => onConnect(connector)}
+            >
+              {connector.name}
+              {!connector.ready && " (unavailable)"}
+            </MenuItem>
+          ))}
       </MenuList>
     </Menu>
   );
