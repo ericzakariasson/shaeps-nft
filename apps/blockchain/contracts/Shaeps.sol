@@ -32,13 +32,6 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
 
     constructor() ERC721("Shaeps", "SHAEPS") {}
 
-    function debug() public view returns (uint256[6] memory) {
-        uint256 seed = uint256(keccak256(abi.encodePacked(msg.sender)));
-        bytes memory hash = abi.encodePacked(bytes32(seed));
-
-        return generateColors(hash);
-    }
-
     function generateColors(bytes memory hash)
         internal
         pure
