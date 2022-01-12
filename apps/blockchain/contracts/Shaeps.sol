@@ -128,16 +128,24 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
             );
     }
 
+    /// @dev withdraw funds to collector address
     function withdraw() public onlyOwner {
         // TODO: don't withdraw everything, store for airdrop
         Address.sendValue(collector, address(this).balance);
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    /// @notice Mints NFT to address
+    /// @dev Mints NFT and generates metadata (including svg image) and store
+    /// @param to address of the NFT receiver
+    function safeMint(address to) public payable {
         uint256 tokenId = _tokenIds.current();
-        _tokenIds.increment();
+        require(tokenId + 1 <= MAX_SUPPLY, "Total supply minted");
+
+        require(msg.value >= PRICE, "Not enough funds sent");
+
         _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+        _setTokenURI(tokenId, generateMetadata(tokenId));
+        _tokenIds.increment();
     }
 
     // The following functions are overrides required by Solidity.
