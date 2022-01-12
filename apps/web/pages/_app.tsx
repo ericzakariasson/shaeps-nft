@@ -25,7 +25,7 @@ const connectors = [injectedConnector, walletConnectConnector];
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Provider connectors={() => connectors}>
+      <Provider connectors={() => connectors} autoConnect>
         <Component {...pageProps} />
       </Provider>
     </ChakraProvider>
