@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import {Base64} from "./libraries/Base64.sol";
 
 /// @custom:security-contact security@shaeps.xyz
@@ -17,6 +18,8 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
 
     uint256 public constant MAX_SUPPLY = 10_000;
     uint256 public constant PRICE = 0.001 ether;
+
+    address payable public collector;
 
     string[9] palette = [
         "#EB5757",
@@ -30,7 +33,13 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
         "#111"
     ];
 
-    constructor() ERC721("Shaeps", "SHAEPS") {}
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        address payable _collector
+    ) ERC721(_name, _symbol) {
+        collector = _collector;
+    }
 
     function generateColors(bytes memory hash)
         internal
@@ -117,6 +126,11 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
                     )
                 )
             );
+    }
+
+    function withdraw() public onlyOwner {
+        // TODO: don't withdraw everything, store for airdrop
+        Address.sendValue(collector, address(this).balance);
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {
