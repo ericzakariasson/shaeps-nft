@@ -3,8 +3,6 @@ import { FormEvent } from "react";
 import { useConnect } from "wagmi";
 
 type MintFormProps = {
-  mintedSupply: number;
-  totalSupply: number;
   onMint: (amount: number) => void;
 };
 
