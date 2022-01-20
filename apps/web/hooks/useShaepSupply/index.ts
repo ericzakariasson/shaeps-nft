@@ -1,0 +1,1 @@
+export { useShaepSupply } from "./useShaepSupply";
