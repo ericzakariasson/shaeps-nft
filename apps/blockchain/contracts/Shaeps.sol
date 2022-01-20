@@ -16,10 +16,16 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIds;
 
-    uint256 public constant MAX_SUPPLY = 10_000;
-    uint256 public constant PRICE = 0.001 ether;
+    uint256 private constant MAX_SUPPLY = 111;
+    uint256 private constant PRICE = 0.001 ether;
 
     address payable public collector;
+
+    // TODO:
+    // - add methods for fetching minted supply and total supply
+    // - add methods for fetching price
+    // - figure out how to make `mint` payable
+    // - set initial token to `1` instead of `0`
 
     string[9] palette = [
         "#EB5757",
@@ -39,6 +45,18 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
         address payable _collector
     ) ERC721(_name, _symbol) {
         collector = _collector;
+    }
+
+    function getPrice() public pure returns (uint256) {
+        return PRICE;
+    }
+
+    function getMaxSupply() public pure returns (uint256) {
+        return MAX_SUPPLY;
+    }
+
+    function getMintedSupply() public view returns (uint256) {
+        return _tokenIds.current();
     }
 
     function generateColors(bytes memory hash)
@@ -137,9 +155,9 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     /// @notice Mints NFT to address
     /// @dev Mints NFT and generates metadata (including svg image) and store
     /// @param to address of the NFT receiver
-    function safeMint(address to) public payable {
+    function mint(address to) public payable {
         uint256 tokenId = _tokenIds.current();
-        require(tokenId + 1 <= MAX_SUPPLY, "Total supply minted");
+        require(tokenId + 1 <= TOTAL_SUPPLY, "Total supply minted");
 
         require(msg.value >= PRICE, "Not enough funds sent");
 
