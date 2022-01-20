@@ -5,33 +5,37 @@ import {
   NumberInput,
   NumberInputField,
   Button,
+  Box,
   FormHelperText,
 } from "@chakra-ui/react";
 import { useState, FormEvent } from "react";
 
 type MintFormProps = {
-  minted: number;
+  mintedSupply: number;
   totalSupply: number;
+  onMint: (amount: number) => void;
 };
 
-export function MintForm({ minted, totalSupply }: MintFormProps) {
+export function MintForm({ mintedSupply, totalSupply, onMint }: MintFormProps) {
   const [amount, setAmount] = useState<number | undefined>();
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: mint NFT
+    onMint(amount);
   }
 
-  function handleChange(_: string, value: number) {
-    setAmount(Number.isInteger(value) ? value : undefined);
-  }
+  // function handleChange(_: string, value: number) {
+  //   setAmount(Number.isInteger(value) ? value : undefined);
+  // }
+
+  // const percentageMinted = ((mintedSupply / totalSupply) * 100).toFixed(0);
 
   return (
     <form onSubmit={handleSubmit}>
-      <FormControl w={["100%", "50%", "unset"]} mb="2">
-        <FormLabel htmlFor="amount">amount</FormLabel>
+      <FormControl>
+        {/* <FormLabel htmlFor="amount">amount</FormLabel> */}
         <Flex>
-          <NumberInput
+          {/* <NumberInput
             mr="2"
             flex={[1, "unset", "unset"]}
             min={0}
@@ -46,21 +50,20 @@ export function MintForm({ minted, totalSupply }: MintFormProps) {
               placeholder="111"
               required
             />
-          </NumberInput>
+          </NumberInput> */}
           <Button
             color="white"
             bg="black"
+            _hover={{ bg: "black" }}
             borderRadius="0"
             lineHeight="2"
             type="submit"
+            px="6"
+            py="4"
           >
             mint
           </Button>
         </Flex>
-        <FormHelperText fontSize="sm">
-          {minted}/{totalSupply} ({((minted / totalSupply) * 100).toFixed(0)} %)
-          minted
-        </FormHelperText>
       </FormControl>
     </form>
   );
