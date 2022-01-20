@@ -4,28 +4,42 @@ import type { AppProps } from "next/app";
 import { Provider, chain } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { providers } from "ethers";
 
 import "../index.css";
 import { theme } from "../theme";
 
-const chains = [chain.rinkeby, chain.polygonTestnetMumbai];
+function getConnectors(chainId: number) {
+  const chains = [chain.rinkeby, chain.polygonTestnetMumbai];
+  const injectedConnector = new InjectedConnector({ chains });
 
-const injectedConnector = new InjectedConnector({ chains });
+  const walletConnectConnector = new WalletConnectConnector({
+    chains,
+    options: {
+      qrcode: true,
+      // TODO: add infura id
+    },
+  });
+  return [injectedConnector, walletConnectConnector];
+}
 
-const walletConnectConnector = new WalletConnectConnector({
-  chains,
-  options: {
-    qrcode: true,
-    // TODO: add infura id
-  },
-});
+function getProvider(chainId: number) {
+  const alchemyProvider = new providers.AlchemyProvider(
+    chainId,
+    process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+  );
 
-const connectors = [injectedConnector, walletConnectConnector];
+  return alchemyProvider;
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Provider connectors={() => connectors} autoConnect>
+      <Provider
+        provider={({ chainId }) => getProvider(chainId)}
+        connectors={({ chainId }) => getConnectors(chainId)}
+        autoConnect
+      >
         <Component {...pageProps} />
       </Provider>
     </ChakraProvider>
