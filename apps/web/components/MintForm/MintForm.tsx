@@ -4,9 +4,10 @@ import { useConnect } from "wagmi";
 
 type MintFormProps = {
   onMint: (amount: number) => void;
+  isLoading: boolean;
 };
 
-export function MintForm({ onMint }: MintFormProps) {
+export function MintForm({ onMint, isLoading }: MintFormProps) {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     onMint(1);
@@ -33,6 +34,7 @@ export function MintForm({ onMint }: MintFormProps) {
             px="6"
             py="4"
             disabled={!connected}
+            isLoading={isLoading}
           >
             mint
           </Button>

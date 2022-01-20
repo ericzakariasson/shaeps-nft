@@ -12,6 +12,7 @@ import {
 import { Header } from "../components/Header";
 import { MintForm } from "../components/MintForm";
 import { Shaep } from "../components/Shaep";
+import { MintState, useMintShaep } from "../hooks/useMintShaep/useMintShaep";
 import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 import { useShaepSupply } from "../hooks/useShaepSupply";
 
@@ -22,37 +23,7 @@ function Main() {
   });
 
   const { totalSupplyRequest, mintedSupplyRequest } = useShaepSupply();
-
-  // const [{ data: account }] = useAccount();
-  // const [signer, setSigner] = useState<Signer>();
-
-  // // get signer
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const res = await account?.connector?.getSigner();
-  //       setSigner(res);
-  //     } catch (e) {
-  //       setSigner(undefined);
-  //     }
-  //   })();
-  // }, [account?.connector]);
-
-  // const contract = useContract({
-  //   addressOrName: CONTRACT_ADDRESS,
-  //   contractInterface: shaepAbi.abi,
-  //   signerOrProvider: signer,
-  // });
-
-  async function handleMint(amount: number) {
-    console.log("will mint", amount);
-    // const tx = await contract.safeMint(
-    //   "0x9B46d5E5e96c3dD6fCb6DD7ccb4a5A049a7e5d31"
-    // );
-    // await tx.wait();
-
-    // console.log("Minted", `https://rinkeby.etherscan.io/tx/${tx.hash}`);
-  }
+  const { mintState, onMint } = useMintShaep();
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   const totalSupply = totalSupplyRequest.data?.toNumber() ?? "?";
@@ -120,7 +91,10 @@ function Main() {
             {mintedSupply}/{totalSupply} minted
           </Text>
           <Box>
-            <MintForm onMint={handleMint} />
+            <MintForm
+              onMint={() => onMint()}
+              isLoading={mintState === MintState.Loading}
+            />
           </Box>
         </Flex>
       </Flex>
