@@ -61,7 +61,7 @@ export function Header() {
           />
         )}
       </Flex>
-      <Text>just some rectangles and circles, probably shaeps</Text>
+      <Text>just some lines and colors, probably shaeps</Text>
     </Box>
   );
 }

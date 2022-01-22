@@ -61,9 +61,11 @@ export function useMintShaep({ price }: UseMintShaepProps) {
         });
         setMintState(MintState.Initial);
       } else {
+        console.error("Error while minting:", error);
         toast({
           title: "An error occured while minting",
-          description: error.message ?? undefined,
+          description:
+            "Please try again later! You can check the console for more details",
           status: "error",
         });
         setMintState(MintState.Error);

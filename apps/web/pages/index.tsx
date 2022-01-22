@@ -39,7 +39,13 @@ function Main() {
 
   return (
     <Flex as="main" direction={["column", "column", "row"]} mb="8">
-      <Box border="1px" flex="1" mr={["0", "0", "8"]} mb={["8", "8", "0"]}>
+      <Box
+        border="1px"
+        flex="1"
+        mr={["0", "0", "8"]}
+        mb={["8", "8", "0"]}
+        title="Randomly generated Shaep"
+      >
         <Shaep colors={colors} />
       </Box>
       <Flex flex="1" direction="column">
