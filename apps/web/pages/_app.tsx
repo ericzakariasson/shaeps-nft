@@ -23,12 +23,14 @@ function getConnectors(chainId: number) {
 }
 
 function getProvider(chainId: number) {
-  const alchemyProvider = new providers.AlchemyProvider(
-    chainId,
-    process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-  );
-
-  return alchemyProvider;
+  try {
+    return new providers.AlchemyProvider(
+      chainId,
+      process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+    );
+  } catch (error) {
+    console.error("Alchemy provider error:", error);
+  }
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
