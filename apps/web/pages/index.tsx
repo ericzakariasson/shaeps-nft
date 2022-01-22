@@ -81,7 +81,7 @@ function Main() {
             <Text as="i">
               n<Text as="sup">r</Text>
             </Text>
-            ), so the chance of your future shaep being unique is{" "}
+            ), so the chance of your future Shaep being unique is{" "}
             <Text as="em">good</Text>
           </Text>
           <Text mb="2">some things that are good to know:</Text>
@@ -94,7 +94,7 @@ function Main() {
             </ListItem>
             <ListItem>
               the image to the left is just a showcase of what Shaeps can look
-              like. it&apos;s not a preview of how the minted shape will look
+              like. it&apos;s not a preview of how the minted Shaep will look
             </ListItem>
           </UnorderedList>
         </Box>
