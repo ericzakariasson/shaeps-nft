@@ -25,8 +25,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     // map tokenId to generated hash
     mapping(uint256 => bytes) private tokenIdHash;
 
-    // TODO:
-    // - emit events
+    event Minted(address to, uint256 tokenId);
 
     string[9] palette = [
         "#EB5757", // red
@@ -58,7 +57,6 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         address payable _collector
     ) ERC721(_name, _symbol) {
         collector = _collector;
-        _tokenIds.increment(); // set initial token to `1`
     }
 
     function mintedSupply() public view returns (uint256) {
@@ -188,7 +186,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         returns (string memory)
     {
         string memory name = string(
-            abi.encodePacked("Shaep #", Strings.toString(tokenId))
+            abi.encodePacked("Shaep #", Strings.toString(tokenId + 1))
         );
         string memory description = string(
             abi.encodePacked(
@@ -256,6 +254,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _safeMint(to, tokenId);
         tokenIdHash[tokenId] = generateHash(to, block.timestamp, tokenId);
         _setTokenURI(tokenId, generateMetadata(tokenId));
+        emit Minted(to, tokenId);
         _tokenIds.increment();
     }
 
