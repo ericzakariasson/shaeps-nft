@@ -15,6 +15,7 @@ import { Shaep } from "../components/Shaep";
 import { MintState, useMintShaep } from "../hooks/useMintShaep/useMintShaep";
 import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 import { useShaepSupply } from "../hooks/useShaepSupply";
+import { ethers } from "ethers";
 
 function Main() {
   const { colors } = useRandomizedShaep({
@@ -22,20 +23,22 @@ function Main() {
     interval: 1000,
   });
 
-  const { totalSupplyRequest, mintedSupplyRequest } = useShaepSupply();
-  const { mintState, onMint } = useMintShaep();
+  const { maxSupplyRequest, mintedSupplyRequest, priceRequest } =
+    useShaepSupply();
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  const totalSupply = totalSupplyRequest.data?.toNumber() ?? "?";
+  const maxSupply = maxSupplyRequest.data?.toNumber() ?? "?";
   const mintedSupply = mintedSupplyRequest.data?.toNumber() ?? "?";
 
+  const price = priceRequest.data?.toNumber() ?? 0;
+  const formattedPrice = ethers.utils.formatEther(price);
+
+  const { mintState, onMint } = useMintShaep({
+    price,
+  });
+
   return (
-    <Flex
-      as="main"
-      direction={["column", "column", "row"]}
-      alignItems={["unset", "unset", "flex-start"]}
-      mb="8"
-    >
+    <Flex as="main" direction={["column", "column", "row"]} mb="8">
       <Box border="1px" flex="1" mr={["0", "0", "8"]} mb={["8", "8", "0"]}>
         <Shaep colors={colors} />
       </Box>
@@ -75,20 +78,23 @@ function Main() {
             mb="4"
           >
             <ListItem>
-              there will be a total of {totalSupply} Shaeps that can be minted.
+              there will be a total of {maxSupply} Shaeps that can be minted.
             </ListItem>
-            <ListItem>the cost of one Shaep will be 5 $MATIC</ListItem>
+            <ListItem>
+              the cost of one Shaep will be {formattedPrice} $MATIC
+            </ListItem>
           </UnorderedList>
         </Box>
         <Flex
           order={[0, 0, 1]}
-          mb={["4", "4", "0"]}
+          mb={[4, 4, 0]}
+          mt={[0, 0, "auto"]}
           direction={["row", "row", "column"]}
           align={["end", "end", "unset"]}
           justify={["space-between", "space-between", "unset"]}
         >
           <Text fontSize="lg" mb={[0, 0, "2"]}>
-            {mintedSupply}/{totalSupply} minted
+            {mintedSupply}/{maxSupply} minted
           </Text>
           <Box>
             <MintForm

@@ -17,7 +17,11 @@ enum MintErrorCode {
   Rejected = 4001,
 }
 
-export function useMintShaep() {
+type UseMintShaepProps = {
+  price: number | undefined;
+};
+
+export function useMintShaep({ price }: UseMintShaepProps) {
   const [{ data: signerData }] = useSigner();
   const [{ data: accountData }] = useAccount();
 
@@ -35,10 +39,16 @@ export function useMintShaep() {
   const [mintState, setMintState] = useState<MintState>(MintState.Initial);
 
   async function handleMint() {
+    if (price === undefined) {
+      return toast({
+        title: "The price is being fetched, please hold on!",
+        status: "info",
+      });
+    }
     try {
       setMintState(MintState.Loading);
       const tx = await contract.mint(accountData.address, {
-        value: ethers.utils.parseEther("0.006"),
+        value: price,
       });
       await tx.wait();
       setMintState(MintState.Success);
