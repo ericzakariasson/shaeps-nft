@@ -40,7 +40,7 @@ export function Header() {
   }, [connectError, toast]);
 
   return (
-    <Box mb={["4", "4", "12"]}>
+    <Box mb={["4", "4", "24"]}>
       <Flex mb="2">
         <Box>
           <Heading size="2xl" fontWeight="normal">

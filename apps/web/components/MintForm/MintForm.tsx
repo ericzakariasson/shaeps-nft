@@ -16,6 +16,7 @@ export function MintForm({ onMint, isLoading }: MintFormProps) {
   const [
     {
       data: { connected },
+      loading,
     },
   ] = useConnect();
 
@@ -31,19 +32,19 @@ export function MintForm({ onMint, isLoading }: MintFormProps) {
             borderRadius="0"
             lineHeight="2"
             type="submit"
-            px="6"
+            px="8"
             py="4"
             disabled={!connected}
             isLoading={isLoading}
           >
             mint
           </Button>
+          {!connected && !loading ? (
+            <FormHelperText ml="4" color="black" fontSize="sm">
+              connect wallet to mint
+            </FormHelperText>
+          ) : null}
         </Flex>
-        {connected ? null : (
-          <FormHelperText color="black" fontSize="sm">
-            connect wallet to mint
-          </FormHelperText>
-        )}
       </FormControl>
     </form>
   );

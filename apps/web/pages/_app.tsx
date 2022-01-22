@@ -17,7 +17,6 @@ function getConnectors(chainId: number) {
     chains,
     options: {
       qrcode: true,
-      // TODO: add infura id
     },
   });
   return [injectedConnector, walletConnectConnector];

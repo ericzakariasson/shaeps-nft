@@ -17,6 +17,9 @@ import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 import { useShaepSupply } from "../hooks/useShaepSupply";
 import { ethers } from "ethers";
 
+const COLOR_COUNT = 9;
+const PART_COUNT = 6;
+
 function Main() {
   const { colors } = useRandomizedShaep({
     randomizedPartCount: 3,
@@ -29,6 +32,8 @@ function Main() {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   const maxSupply = maxSupplyRequest.data?.toNumber() ?? "?";
   const mintedSupply = mintedSupplyRequest.data?.toNumber() ?? "?";
+
+  const allMinted = maxSupply - mintedSupply === 0;
 
   const price = priceRequest.data?.toNumber() ?? 0;
   const formattedPrice = ethers.utils.formatEther(price);
@@ -56,7 +61,7 @@ function Main() {
           <Text mb="2">
             this project was created to bring some simple and elegant shapes to
             the nft landscape. something easy, yet complex. something boring,
-            yet enough. take a look at{" "}
+            yet amusing. take a look at{" "}
             <Link
               isExternal
               href={`https://opensea.io/assets/matic/${contractAddress}`}
@@ -68,9 +73,11 @@ function Main() {
             to see what has been minted so far
           </Text>
           <Text mb="2">
-            the art is generated on <Text as="i">the chain</Text> by selecting
-            colors based on your wallet address. there are a total of 531441
-            permutations (9 colors and 6 parts,{" "}
+            the art is generated on <Text as="i">the chain</Text> by sampling
+            data based on the state of <Text as="i">the chain</Text>, as well as
+            data about the minter (you). there are a total of{" "}
+            {COLOR_COUNT ** PART_COUNT} permutations ({COLOR_COUNT} colors and{" "}
+            {PART_COUNT} parts,{" "}
             <Text as="i">
               n<Text as="sup">r</Text>
             </Text>
@@ -78,16 +85,16 @@ function Main() {
             <Text as="em">good</Text>
           </Text>
           <Text mb="2">some things that are good to know:</Text>
-          <UnorderedList
-            listStyleType="square"
-            listStylePosition="inside"
-            mb="4"
-          >
+          <UnorderedList listStyleType="square" pl="4" mb="4">
             <ListItem>
               there will be a total of {maxSupply} Shaeps that can be minted.
             </ListItem>
             <ListItem>
               the cost of one Shaep will be {formattedPrice} $MATIC
+            </ListItem>
+            <ListItem>
+              the image to the left is just a showcase of what Shaeps can look
+              like. it&apos;s not a preview of how the minted shape will look
             </ListItem>
           </UnorderedList>
         </Box>
@@ -95,19 +102,26 @@ function Main() {
           order={[0, 0, 1]}
           mb={[4, 4, 0]}
           mt={[0, 0, "auto"]}
-          direction={["row", "row", "column"]}
-          align={["end", "end", "unset"]}
+          direction={[allMinted ? "column" : "row", "row", "column"]}
+          align={[allMinted ? "start" : "end", "end", "flex-start"]}
           justify={["space-between", "space-between", "unset"]}
         >
-          <Text fontSize="lg" mb={[0, 0, "2"]}>
+          <Text fontSize="xl" mb={[allMinted ? 2 : 0, 0, "2"]}>
             {mintedSupply}/{maxSupply} minted
           </Text>
-          <Box>
-            <MintForm
-              onMint={() => onMint()}
-              isLoading={mintState === MintState.Loading}
-            />
-          </Box>
+          {!allMinted && (
+            <Box>
+              <MintForm
+                onMint={() => onMint()}
+                isLoading={mintState === MintState.Loading}
+              />
+            </Box>
+          )}
+          {allMinted && (
+            <Text bg="black" color="white" px="4" py="2" display="inline">
+              All Shaeps have been minted. Thank you. Talk soon
+            </Text>
+          )}
         </Flex>
       </Flex>
     </Flex>
