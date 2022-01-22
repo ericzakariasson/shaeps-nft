@@ -15,6 +15,7 @@ export enum MintState {
 
 enum MintErrorCode {
   Rejected = 4001,
+  UnsufficientFunds = "INSUFFICIENT_FUNDS",
 }
 
 type UseMintShaepProps = {
@@ -49,26 +50,40 @@ export function useMintShaep({ price }: UseMintShaepProps) {
       setMintState(MintState.Loading);
       const tx = await contract.mint(accountData.address, {
         value: price,
+        gasLimit: process.env.NEXT_PUBLIC_MINT_GAS_LIMIT,
       });
       await tx.wait();
       setMintState(MintState.Success);
-      console.log("Minted", `https://rinkeby.etherscan.io/tx/${tx.hash}`);
+      toast({
+        title: "Your Shaep has been minted",
+        status: "success",
+      });
     } catch (error) {
-      if (error.code === MintErrorCode.Rejected) {
-        toast({
-          title: "Mint transaction was rejected",
-          status: "warning",
-        });
-        setMintState(MintState.Initial);
-      } else {
-        console.error("Error while minting:", error);
-        toast({
-          title: "An error occured while minting",
-          description:
-            "Please try again later! You can check the console for more details",
-          status: "error",
-        });
-        setMintState(MintState.Error);
+      switch (error.code) {
+        case MintErrorCode.Rejected:
+          toast({
+            title: "Mint transaction was rejected",
+            status: "warning",
+          });
+          setMintState(MintState.Initial);
+          break;
+        case MintErrorCode.UnsufficientFunds:
+          toast({
+            title: "Unsufficient funds",
+            status: "warning",
+          });
+          setMintState(MintState.Initial);
+          break;
+
+        default:
+          console.error("Error while minting:", error);
+          toast({
+            title: "An error occured while minting",
+            description:
+              "Please try again later! You can check the console for more details",
+            status: "error",
+          });
+          setMintState(MintState.Error);
       }
     }
   }
