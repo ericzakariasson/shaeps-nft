@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useContractRead, useProvider } from "wagmi";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
 import { Shaeps } from "../../contract/types/Shaeps";
@@ -11,18 +12,30 @@ export function useShaepSupply() {
     signerOrProvider: provider,
   };
 
-  const [totalSupplyRequest] = useContractRead<Shaeps>(
+  const [maxSupplyRequest, getMaxSupply] = useContractRead<Shaeps>(
     contractConfig,
-    "getTotalSupply"
+    "maxSupply"
   );
 
-  const [mintedSupplyRequest] = useContractRead<Shaeps>(
+  const [mintedSupplyRequest, getMintedSupply] = useContractRead<Shaeps>(
     contractConfig,
-    "getMintedSupply"
+    "mintedSupply"
   );
+
+  const [priceRequest, getPrice] = useContractRead<Shaeps>(
+    contractConfig,
+    "price"
+  );
+
+  useEffect(() => {
+    getMaxSupply();
+    getMintedSupply();
+    getPrice();
+  }, [getMaxSupply, getMintedSupply, getPrice]);
 
   return {
-    totalSupplyRequest,
+    maxSupplyRequest,
     mintedSupplyRequest,
+    priceRequest,
   };
 }
