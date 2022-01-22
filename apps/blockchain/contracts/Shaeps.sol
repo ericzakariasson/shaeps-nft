@@ -22,23 +22,34 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     address payable public collector;
 
-    // mapping of tokenId to hash
+    // map tokenId to generated hash
     mapping(uint256 => bytes) private tokenIdHash;
 
     // TODO:
     // - emit events
-    // - use time in hash generation
 
     string[9] palette = [
-        "#EB5757",
-        "#F2994A",
-        "#F2C94C",
-        "#6FCF97",
-        "#56CCF2",
-        "#2F80ED",
-        "#9B51E0",
-        "#FFF",
-        "#111"
+        "#EB5757", // red
+        "#F2994A", // orange
+        "#F2C94C", // yellow
+        "#6FCF97", // green
+        "#56CCF2", // light blue
+        "#2F80ED", // blue
+        "#9B51E0", // purple
+        "#FFF", // white
+        "#111" // black
+    ];
+
+    string[9] colorNames = [
+        "Red",
+        "Orange",
+        "Yellow",
+        "Green",
+        "Light Blue",
+        "Blue",
+        "Purple",
+        "White",
+        "Black"
     ];
 
     constructor(
@@ -49,11 +60,11 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         collector = _collector;
     }
 
-    function getMintedSupply() public view returns (uint256) {
+    function mintedSupply() public view returns (uint256) {
         return _tokenIds.current();
     }
 
-    function generateColors(bytes memory hash)
+    function generateColorIndexes(bytes memory hash)
         internal
         pure
         returns (uint256[6] memory)
@@ -65,10 +76,11 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return colors;
     }
 
-    function generateSvg(uint256 tokenId) public view returns (string memory) {
-        bytes memory hash = tokenIdHash[tokenId];
-        uint256[6] memory colors = generateColors(hash);
-
+    function generateSvgWithColors(uint256[6] memory colors)
+        internal
+        view
+        returns (string memory)
+    {
         return
             string(
                 abi.encodePacked(
@@ -105,6 +117,11 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
             );
     }
 
+    function generateSvg(uint256 tokenId) public view returns (string memory) {
+        uint256[6] memory colors = generateColorIndexes(tokenIdHash[tokenId]);
+        return generateSvgWithColors(colors);
+    }
+
     function generateMetadata(uint256 tokenId)
         public
         view
@@ -114,8 +131,40 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
             abi.encodePacked("Shaep #", Strings.toString(tokenId))
         );
         string memory description = "rectangles and circles";
-        string memory svg = generateSvg(tokenId);
-        // TODO: attributes and traits
+
+        bytes memory hash = tokenIdHash[tokenId];
+        uint256[6] memory colorIndexes = generateColorIndexes(hash);
+        string memory svg = generateSvgWithColors(colorIndexes);
+
+        uint256[9] memory colorCount;
+
+        for (uint256 i = 0; i < colorIndexes.length; i++) {
+            uint256 colorIndex = colorIndexes[i];
+            colorCount[colorIndex] += 1;
+        }
+
+        string memory traits;
+
+        for (uint256 i = 0; i < colorCount.length; i++) {
+            if (colorCount[i] > 0) {
+                traits = string(
+                    abi.encodePacked(
+                        traits,
+                        string(
+                            abi.encodePacked(
+                                '{"trait_type":"',
+                                colorNames[i],
+                                '", "value":"',
+                                colorCount[i],
+                                '"}'
+                            )
+                        )
+                    )
+                );
+            }
+        }
+
+        string memory attributes = string(abi.encodePacked("[", traits, "]"));
 
         return
             string(
@@ -130,6 +179,8 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
                                 description,
                                 '", "image": "',
                                 svg,
+                                '", "attributes":"',
+                                attributes,
                                 '"}'
                             )
                         )
@@ -139,13 +190,13 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     }
 
     function generateHash(
-        address sender,
+        address to,
         uint256 timestamp,
         uint256 tokenId
     ) internal pure returns (bytes memory) {
         return
             abi.encodePacked(
-                keccak256(abi.encodePacked(sender, timestamp, tokenId))
+                keccak256(abi.encodePacked(to, timestamp, tokenId))
             );
     }
 
@@ -165,13 +216,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         require(msg.value >= price, "Not enough funds sent");
 
         _safeMint(to, tokenId);
-
-        tokenIdHash[tokenId] = generateHash(
-            msg.sender,
-            block.timestamp,
-            tokenId
-        );
-
+        tokenIdHash[tokenId] = generateHash(to, block.timestamp, tokenId);
         _setTokenURI(tokenId, generateMetadata(tokenId));
         _tokenIds.increment();
     }
