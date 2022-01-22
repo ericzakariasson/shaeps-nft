@@ -4,12 +4,12 @@ import {
   Flex,
   Heading,
   ListItem,
-  Spacer,
   Text,
   UnorderedList,
   Link,
 } from "@chakra-ui/react";
 import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 import { MintForm } from "../components/MintForm";
 import { Shaep } from "../components/Shaep";
 import { MintState, useMintShaep } from "../hooks/useMintShaep/useMintShaep";
@@ -102,34 +102,15 @@ function Main() {
   );
 }
 
-function Footer() {
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-
-  return (
-    <Flex as="footer" direction={["column", "row", "row"]}>
-      <Link isExternal href="https://twitter.com/ericzakariasson">
-        twitter
-      </Link>
-      <Text mx="2">—</Text>
-      <Link isExternal href="https://github.com/ericzakariasson/shaeps-nft">
-        github
-      </Link>
-      <Spacer />
-      <Link
-        isExternal
-        href={`https://polygonscan.com/token/${contractAddress}`}
-        color="gray"
-        fontSize="sm"
-      >
-        {contractAddress}
-      </Link>
-    </Flex>
-  );
-}
-
 export default function Index() {
   return (
-    <Container maxW="container.lg" py={["4", "4", "12"]}>
+    <Container
+      as={Flex}
+      maxW="container.lg"
+      py={["4", "4", "12"]}
+      minHeight="100vh"
+      direction="column"
+    >
       <Header />
       <Main />
       <Footer />
