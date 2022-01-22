@@ -155,8 +155,9 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
                                 '{"trait_type":"',
                                 colorNames[i],
                                 '", "value":"',
-                                colorCount[i],
-                                '"}'
+                                Strings.toString(colorCount[i]),
+                                '"}',
+                                i == colorCount.length - 1 ? "" : ","
                             )
                         )
                     )
@@ -179,9 +180,9 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
                                 description,
                                 '", "image": "',
                                 svg,
-                                '", "attributes":"',
+                                '", "attributes":',
                                 attributes,
-                                '"}'
+                                "}"
                             )
                         )
                     )
