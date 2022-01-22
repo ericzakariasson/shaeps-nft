@@ -139,20 +139,11 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
             );
     }
 
-    function generateMetadata(uint256 tokenId)
-        public
+    function generateAttributes(uint256[6] memory colorIndexes)
+        internal
         view
         returns (string memory)
     {
-        string memory name = string(
-            abi.encodePacked("Shaep #", Strings.toString(tokenId))
-        );
-        string memory description = "rectangles and circles";
-
-        bytes memory hash = tokenIdHash[tokenId];
-        uint256[6] memory colorIndexes = generateColorIndexes(hash);
-        string memory svg = generateSvgWithColors(colorIndexes);
-
         uint256[9] memory colorCount;
 
         for (uint256 i = 0; i < colorIndexes.length; i++) {
@@ -187,7 +178,24 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
             )
         );
 
-        string memory attributes = string(abi.encodePacked("[", traits, "]"));
+        return string(abi.encodePacked("[", traits, "]"));
+    }
+
+    function generateMetadata(uint256 tokenId)
+        public
+        view
+        returns (string memory)
+    {
+        string memory name = string(
+            abi.encodePacked("Shaep #", Strings.toString(tokenId))
+        );
+        string memory description = "lines and colors";
+
+        bytes memory hash = tokenIdHash[tokenId];
+        uint256[6] memory colorIndexes = generateColorIndexes(hash);
+        string memory svg = generateSvgWithColors(colorIndexes);
+
+        string memory attributes = generateAttributes(colorIndexes);
 
         return
             string(
