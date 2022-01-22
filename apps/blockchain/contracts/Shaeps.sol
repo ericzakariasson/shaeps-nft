@@ -189,7 +189,13 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         string memory name = string(
             abi.encodePacked("Shaep #", Strings.toString(tokenId))
         );
-        string memory description = "lines and colors";
+        string memory description = string(
+            abi.encodePacked(
+                "a collection of lines and colors composed to ",
+                Strings.toString(maxSupply),
+                " shapes"
+            )
+        );
 
         bytes memory hash = tokenIdHash[tokenId];
         uint256[6] memory colorIndexes = generateColorIndexes(hash);
