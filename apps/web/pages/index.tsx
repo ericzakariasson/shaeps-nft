@@ -26,17 +26,11 @@ function Main() {
     interval: 1000,
   });
 
-  const { maxSupplyRequest, mintedSupplyRequest, priceRequest } =
-    useShaepSupply();
-
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  const maxSupply = maxSupplyRequest.data?.toNumber() ?? "?";
-  const mintedSupply = mintedSupplyRequest.data?.toNumber() ?? "?";
 
-  const allMinted = maxSupply - mintedSupply === 0;
+  const { maxSupply, mintedSupply, price, allMinted } = useShaepSupply();
 
-  const price = priceRequest.data?.toNumber() ?? 0;
-  const formattedPrice = ethers.utils.formatEther(price);
+  const formattedPrice = ethers.utils.formatEther(price ?? 0);
 
   const { mintState, onMint } = useMintShaep({
     price,
@@ -87,7 +81,8 @@ function Main() {
           <Text mb="2">some things that are good to know:</Text>
           <UnorderedList listStyleType="square" pl="4" mb="4">
             <ListItem>
-              there will be a total of {maxSupply} Shaeps that can be minted.
+              there will be a total of {maxSupply ?? "?"} Shaeps that can be
+              minted.
             </ListItem>
             <ListItem>
               the cost of one Shaep will be {formattedPrice} $MATIC
@@ -107,7 +102,7 @@ function Main() {
           justify={["space-between", "space-between", "unset"]}
         >
           <Text fontSize="xl" mb={[allMinted ? 2 : 0, 0, "2"]}>
-            {mintedSupply}/{maxSupply} minted
+            {mintedSupply ?? "?"}/{maxSupply ?? "?"} minted
           </Text>
           {!allMinted && (
             <Box>

@@ -1,41 +1,48 @@
-import { useEffect } from "react";
-import { useContractRead, useProvider } from "wagmi";
+import { useEffect, useState } from "react";
+import { useContract, useProvider } from "wagmi";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
 import { Shaeps } from "../../contract/types/Shaeps";
 
 export function useShaepSupply() {
+  const [mintedSupply, setMintedSupply] = useState<number | null>(null);
+  const [maxSupply, setMaxSupply] = useState<number | null>(null);
+  const [price, setPrice] = useState<number | null>(null);
+
   const provider = useProvider();
 
-  const contractConfig = {
+  const contract = useContract<Shaeps>({
     addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     contractInterface: Shaeps__factory.abi,
     signerOrProvider: provider,
-  };
+  });
 
-  const [maxSupplyRequest, getMaxSupply] = useContractRead<Shaeps>(
-    contractConfig,
-    "maxSupply"
-  );
-
-  const [mintedSupplyRequest, getMintedSupply] = useContractRead<Shaeps>(
-    contractConfig,
-    "mintedSupply"
-  );
-
-  const [priceRequest, getPrice] = useContractRead<Shaeps>(
-    contractConfig,
-    "price"
-  );
+  function handleMinted() {
+    setMintedSupply((supply) => supply + 1);
+  }
 
   useEffect(() => {
-    getMaxSupply();
-    getMintedSupply();
-    getPrice();
-  }, [getMaxSupply, getMintedSupply, getPrice]);
+    async function fetchInitialState() {
+      const maxSupplyResponse = await contract.maxSupply();
+      const mintedSupplyResponse = await contract.mintedSupply();
+      const priceResponse = await contract.price();
+
+      setMaxSupply(maxSupplyResponse.toNumber());
+      setMintedSupply(mintedSupplyResponse.toNumber());
+      setPrice(priceResponse.toNumber());
+    }
+    fetchInitialState();
+
+    contract.on("Minted", handleMinted);
+
+    return () => {
+      contract.off("Minted", handleMinted);
+    };
+  }, [contract]);
 
   return {
-    maxSupplyRequest,
-    mintedSupplyRequest,
-    priceRequest,
+    maxSupply,
+    mintedSupply,
+    price,
+    allMinted: maxSupply - mintedSupply === 0,
   };
 }

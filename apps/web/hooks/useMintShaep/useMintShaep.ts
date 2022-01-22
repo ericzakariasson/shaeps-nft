@@ -1,10 +1,8 @@
-import { useSigner, useAccount, useContract } from "wagmi";
-import { Shaeps } from "../../contract/types/Shaeps";
-import { ethers } from "ethers";
-
-import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
-import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
+import { useState } from "react";
+import { useAccount, useContract, useSigner } from "wagmi";
+import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
+import { Shaeps } from "../../contract/types/Shaeps";
 
 export enum MintState {
   Initial,
@@ -19,7 +17,7 @@ enum MintErrorCode {
 }
 
 type UseMintShaepProps = {
-  price: number | undefined;
+  price: number | null;
 };
 
 export function useMintShaep({ price }: UseMintShaepProps) {
@@ -40,7 +38,7 @@ export function useMintShaep({ price }: UseMintShaepProps) {
   const [mintState, setMintState] = useState<MintState>(MintState.Initial);
 
   async function handleMint() {
-    if (price === undefined) {
+    if (price === null) {
       return toast({
         title: "The price is being fetched, please hold on!",
         status: "info",
