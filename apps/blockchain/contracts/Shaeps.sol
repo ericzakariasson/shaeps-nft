@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.2;
+pragma solidity ^0.8.4;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -11,21 +12,22 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import {Base64} from "./libraries/Base64.sol";
 
 /// @custom:security-contact security@shaeps.xyz
-contract Shaeps is ERC721, ERC721URIStorage, Ownable {
+contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
 
-    uint256 private constant MAX_SUPPLY = 111;
-    uint256 private constant PRICE = 0.001 ether;
+    uint256 public constant maxSupply = 111;
+    uint256 public constant price = 0.001 ether;
 
     address payable public collector;
 
+    // mapping of tokenId to hash
+    mapping(uint256 => bytes) private tokenIdHash;
+
     // TODO:
-    // - add methods for fetching minted supply and total supply
-    // - add methods for fetching price
-    // - figure out how to make `mint` payable
-    // - set initial token to `1` instead of `0`
+    // - emit events
+    // - use time in hash generation
 
     string[9] palette = [
         "#EB5757",
@@ -47,14 +49,6 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
         collector = _collector;
     }
 
-    function getPrice() public pure returns (uint256) {
-        return PRICE;
-    }
-
-    function getMaxSupply() public pure returns (uint256) {
-        return MAX_SUPPLY;
-    }
-
     function getMintedSupply() public view returns (uint256) {
         return _tokenIds.current();
     }
@@ -72,9 +66,7 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     }
 
     function generateSvg(uint256 tokenId) public view returns (string memory) {
-        bytes memory hash = abi.encodePacked(
-            keccak256(abi.encodePacked(tokenId))
-        );
+        bytes memory hash = tokenIdHash[tokenId];
         uint256[6] memory colors = generateColors(hash);
 
         return
@@ -146,6 +138,17 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
             );
     }
 
+    function generateHash(
+        address sender,
+        uint256 timestamp,
+        uint256 tokenId
+    ) internal pure returns (bytes memory) {
+        return
+            abi.encodePacked(
+                keccak256(abi.encodePacked(sender, timestamp, tokenId))
+            );
+    }
+
     /// @dev withdraw funds to collector address
     function withdraw() public onlyOwner {
         // TODO: don't withdraw everything, store for airdrop
@@ -157,11 +160,18 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     /// @param to address of the NFT receiver
     function mint(address to) public payable {
         uint256 tokenId = _tokenIds.current();
-        require(tokenId + 1 <= TOTAL_SUPPLY, "Total supply minted");
+        require(tokenId + 1 <= maxSupply, "Max supply minted");
 
-        require(msg.value >= PRICE, "Not enough funds sent");
+        require(msg.value >= price, "Not enough funds sent");
 
         _safeMint(to, tokenId);
+
+        tokenIdHash[tokenId] = generateHash(
+            msg.sender,
+            block.timestamp,
+            tokenId
+        );
+
         _setTokenURI(tokenId, generateMetadata(tokenId));
         _tokenIds.increment();
     }
