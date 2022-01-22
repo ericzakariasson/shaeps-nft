@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "typechain --target ethers-v5 --out-dir ./contract/types ./contract/*.json"
+    "abi": "cp ../blockchain/artifacts/contracts/Shaeps.sol/Shaeps.json ./contract/",
+    "postabi": "yarn generate-contract-types",
+    "generate-contract-types": "typechain --target ethers-v5 --out-dir ./contract/types ./contract/*.json"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.7.4",
