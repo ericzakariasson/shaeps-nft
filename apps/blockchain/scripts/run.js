@@ -13,16 +13,15 @@ async function main() {
 
   console.log("Shaeps deployed to:", shaeps.address);
 
-  const tx = await shaeps.safeMint(
-    "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-    {
-      value: 1000000000000000,
-    }
-  );
+  const tx = await shaeps.mint("0x70997970c51812dc3a010c7d01b50e0d17dc79c8", {
+    value: 1000000000000000,
+  });
 
   await tx.wait();
 
-  console.log("NFT minted");
+  console.log("NFT minted", tx.hash);
+  const tokenURI = await shaeps.tokenURI(0);
+  console.log(tokenURI);
 }
 
 main().catch((error) => {
