@@ -58,6 +58,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         address payable _collector
     ) ERC721(_name, _symbol) {
         collector = _collector;
+        _tokenIds.increment(); // set initial token to `1`
     }
 
     function mintedSupply() public view returns (uint256) {
