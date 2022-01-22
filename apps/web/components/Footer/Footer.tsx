@@ -2,6 +2,7 @@ import { Flex, Spacer, Link, Text } from "@chakra-ui/react";
 
 export function Footer() {
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+  const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME;
 
   return (
     <Flex as="footer" direction={["column", "column", "row"]} mt="auto">
@@ -14,7 +15,10 @@ export function Footer() {
           github
         </Link>
         <Text mx="2">—</Text>
-        <Link isExternal href="https://github.com/ericzakariasson/shaeps-nft">
+        <Link
+          isExternal
+          href={`https://opensea.io/collection/${collectionName}/`}
+        >
           opensea
         </Link>
       </Flex>
