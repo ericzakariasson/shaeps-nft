@@ -122,6 +122,23 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         return generateSvgWithColors(colors);
     }
 
+    function createTrait(string memory traitType, string memory value)
+        internal
+        pure
+        returns (string memory)
+    {
+        return
+            string(
+                abi.encodePacked(
+                    '{"trait_type":"',
+                    traitType,
+                    '", "value":"',
+                    value,
+                    '"}'
+                )
+            );
+    }
+
     function generateMetadata(uint256 tokenId)
         public
         view
@@ -145,25 +162,30 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
         string memory traits;
 
+        uint256 totalColorCount = 0;
+
         for (uint256 i = 0; i < colorCount.length; i++) {
             if (colorCount[i] > 0) {
+                totalColorCount++;
                 traits = string(
                     abi.encodePacked(
                         traits,
-                        string(
-                            abi.encodePacked(
-                                '{"trait_type":"',
-                                colorNames[i],
-                                '", "value":"',
-                                Strings.toString(colorCount[i]),
-                                '"}',
-                                i == colorCount.length - 1 ? "" : ","
-                            )
-                        )
+                        createTrait(
+                            colorNames[i],
+                            Strings.toString(colorCount[i])
+                        ),
+                        ","
                     )
                 );
             }
         }
+
+        traits = string(
+            abi.encodePacked(
+                traits,
+                createTrait("Colors", Strings.toString(totalColorCount))
+            )
+        );
 
         string memory attributes = string(abi.encodePacked("[", traits, "]"));
 
