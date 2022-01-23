@@ -3,21 +3,22 @@ import {
   Container,
   Flex,
   Heading,
+  Link,
   ListItem,
   Text,
   UnorderedList,
-  Link,
 } from "@chakra-ui/react";
-import { Header } from "../components/Header";
+import { ethers } from "ethers";
+import Head from "next/head";
+import { useNetwork } from "wagmi";
 import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { MintForm } from "../components/MintForm";
 import { Shaep } from "../components/Shaep";
+import { OPENSEA_COLLECTION_URL } from "../constants/urls";
 import { MintState, useMintShaep } from "../hooks/useMintShaep/useMintShaep";
 import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 import { useShaepSupply } from "../hooks/useShaepSupply";
-import { ethers } from "ethers";
-
-import Head from "next/head";
 
 const COLOR_COUNT = 9;
 const PART_COUNT = 6;
@@ -30,11 +31,13 @@ function Main() {
 
   const { maxSupply, mintedSupply, price, allMinted } = useShaepSupply();
 
+  const [{ data: networkData }] = useNetwork();
+  const isReady = !networkData?.chain?.unsupported ?? false;
+
   const { mintState, onMint } = useMintShaep({
     price,
   });
 
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
   const formattedPrice = ethers.utils.formatEther(price ?? 0);
   const formattedSupply = `${mintedSupply ?? "?"}/${maxSupply ?? "?"}`;
 
@@ -64,7 +67,7 @@ function Main() {
               boring, yet amusing. take a look at{" "}
               <Link
                 isExternal
-                href={`https://opensea.io/assets/matic/${contractAddress}`}
+                href={OPENSEA_COLLECTION_URL}
                 textDecoration="underline"
                 color="#2081e2"
               >
@@ -110,7 +113,7 @@ function Main() {
             <Text fontSize="xl" mb={[allMinted ? 2 : 0, 0, "2"]}>
               {formattedSupply} minted
             </Text>
-            {!allMinted && (
+            {(!isReady || !allMinted) && (
               <Box>
                 <MintForm
                   onMint={() => onMint()}
@@ -118,7 +121,7 @@ function Main() {
                 />
               </Box>
             )}
-            {allMinted && (
+            {allMinted && isReady && (
               <Text bg="black" color="white" px="4" py="2" display="inline">
                 All Shaeps have been minted. Thank you. Talk soon
               </Text>
