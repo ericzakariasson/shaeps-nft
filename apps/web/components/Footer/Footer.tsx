@@ -1,9 +1,11 @@
 import { Flex, Spacer, Link, Text } from "@chakra-ui/react";
+import {
+  BLOCKCHAIN_EXPLORER_BASE_URL,
+  CONTRACT_ADDRESS,
+  OPENSEA_COLLECTION_URL,
+} from "../../constants/urls";
 
 export function Footer() {
-  const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-  const collectionName = process.env.NEXT_PUBLIC_COLLECTION_NAME;
-
   return (
     <Flex as="footer" direction={["column", "column", "row"]} mt="auto">
       <Flex>
@@ -15,22 +17,19 @@ export function Footer() {
           github
         </Link>
         <Text mx="2">—</Text>
-        <Link
-          isExternal
-          href={`https://opensea.io/collection/${collectionName}/`}
-        >
+        <Link isExternal href={OPENSEA_COLLECTION_URL}>
           opensea
         </Link>
       </Flex>
       <Spacer />
       <Link
         isExternal
-        href={`https://polygonscan.com/token/${contractAddress}`}
+        href={`${BLOCKCHAIN_EXPLORER_BASE_URL}/token/${CONTRACT_ADDRESS}`}
         color="gray"
         fontSize="sm"
         mt={["4", "4", "0"]}
       >
-        {contractAddress}
+        {CONTRACT_ADDRESS}
       </Link>
     </Flex>
   );

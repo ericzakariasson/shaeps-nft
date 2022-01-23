@@ -1,4 +1,4 @@
-export const COLORS = [
+export const PALETTE = [
   "#EB5757",
   "#F2994A",
   "#F2C94C",
