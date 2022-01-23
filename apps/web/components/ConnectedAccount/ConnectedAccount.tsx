@@ -8,7 +8,7 @@ import {
   PopoverBody,
   Text,
 } from "@chakra-ui/react";
-import { useNetwork, chain } from "wagmi";
+import { useNetwork, chain, useProvider, useConnect } from "wagmi";
 
 function formatAccountAddress(address: string) {
   return `${address.substring(0, 5)}...${address.substring(
@@ -30,7 +30,14 @@ export function ConnectedAccount({
   address,
   onDisconnect,
 }: ConnectedAccountProps) {
+  const [
+    {
+      data: { connector },
+    },
+  ] = useConnect();
   const [{ data: networkData }, switchNetwork] = useNetwork();
+
+  const isWalletConnect = connector?.name === "WalletConnect";
 
   if (networkData.chain.unsupported) {
     return (
@@ -41,7 +48,9 @@ export function ConnectedAccount({
         color="indianred"
         borderRadius="0"
         lineHeight="2"
-        onClick={() => switchNetwork(chain.rinkeby.id)}
+        onClick={
+          isWalletConnect ? undefined : () => switchNetwork(chain.rinkeby.id)
+        }
       >
         switch network to {chain.rinkeby.name}
       </Button>
