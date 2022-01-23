@@ -7,6 +7,9 @@ require("@typechain/hardhat");
 require("hardhat-gas-reporter");
 require("solidity-coverage");
 
+const accounts =
+  process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
+
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -25,8 +28,11 @@ const config = {
   networks: {
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts,
+    },
+    mumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
+      accounts,
     },
   },
   gasReporter: {
