@@ -1,55 +1,49 @@
 import { useEffect, useState } from "react";
-import { useContract, useProvider } from "wagmi";
+import { useContractEvent, useProvider, useContractRead } from "wagmi";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
 import { Shaeps } from "../../contract/types/Shaeps";
 
-async function tryCatch<T>(fn: () => Promise<T>) {
-  let result: T | null = null;
-  try {
-    result = await fn();
-  } catch (errro) {}
-
-  return result;
-}
-
 export function useShaepSupply() {
   const [mintedSupply, setMintedSupply] = useState<number | null>(null);
-  const [maxSupply, setMaxSupply] = useState<number | null>(null);
-  const [price, setPrice] = useState<number | null>(null);
 
   const provider = useProvider();
 
-  const contract = useContract<Shaeps>({
+  const contractConfig = {
     addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
     contractInterface: Shaeps__factory.abi,
     signerOrProvider: provider,
-  });
+  };
 
   function handleMinted() {
     setMintedSupply((supply) => supply + 1);
   }
 
+  useContractEvent<Shaeps>(contractConfig, "Minted", handleMinted);
+
+  const [mintedSupplyRequest, getMintedSupply] = useContractRead(
+    contractConfig,
+    "mintedSupply"
+  );
+  const [maxSupplyRequest, getMaxSupply] = useContractRead(
+    contractConfig,
+    "maxSupply"
+  );
+  const [priceRequest, getPrice] = useContractRead(contractConfig, "price");
+
   useEffect(() => {
-    async function fetchInitialState() {
-      const [maxSupplyResponse, mintedSupplyResponse, priceResponse] =
-        await Promise.all([
-          tryCatch(contract.maxSupply),
-          tryCatch(contract.mintedSupply),
-          tryCatch(contract.price),
-        ]);
+    getMintedSupply();
+    getMaxSupply();
+    getPrice();
+  }, [getMintedSupply, getMaxSupply, getPrice]);
 
-      setMaxSupply(maxSupplyResponse?.toNumber());
-      setMintedSupply(mintedSupplyResponse?.toNumber());
-      setPrice(priceResponse?.toNumber());
+  const maxSupply = maxSupplyRequest.data?.toNumber() ?? null;
+  const price = priceRequest.data?.toNumber() ?? null;
+
+  useEffect(() => {
+    if (mintedSupplyRequest.data) {
+      setMintedSupply(mintedSupplyRequest.data.toNumber());
     }
-    fetchInitialState();
-
-    contract.on("Minted", handleMinted);
-
-    return () => {
-      contract.off("Minted", handleMinted);
-    };
-  }, [contract]);
+  }, [mintedSupplyRequest.data]);
 
   return {
     maxSupply,
