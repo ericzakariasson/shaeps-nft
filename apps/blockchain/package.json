@@ -39,6 +39,7 @@
   "scripts": {
     "local": "ts-node --files scripts/run.ts",
     "compile": "hardhat compile",
-    "deploy:rinkey": "hardhat run scripts/deploy.js --network rinkeby"
+    "deploy:rinkey": "hardhat run scripts/deploy.js --network rinkeby",
+    "test": "hardhat test"
   }
 }
