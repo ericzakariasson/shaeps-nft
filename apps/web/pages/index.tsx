@@ -13,15 +13,13 @@ import Head from "next/head";
 import { useNetwork } from "wagmi";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
+import { InfoText } from "../components/InfoText";
 import { MintForm } from "../components/MintForm";
 import { Shaep } from "../components/Shaep";
 import { OPENSEA_COLLECTION_URL } from "../constants/urls";
 import { MintState, useMintShaep } from "../hooks/useMintShaep/useMintShaep";
 import { useRandomizedShaep } from "../hooks/useRandomizedShaep";
 import { useShaepSupply } from "../hooks/useShaepSupply";
-
-const COLOR_COUNT = 9;
-const PART_COUNT = 6;
 
 function Main() {
   const { colors } = useRandomizedShaep({
@@ -38,7 +36,6 @@ function Main() {
     price,
   });
 
-  const formattedPrice = ethers.utils.formatEther(price ?? 0);
   const formattedSupply = `${mintedSupply ?? "?"}/${maxSupply ?? "?"}`;
 
   return (
@@ -61,46 +58,7 @@ function Main() {
             <Heading as="h2" size="md" mb="2">
               what this is
             </Heading>
-            <Text mb="2">
-              this project was created to bring some simple and elegant shapes
-              to the nft landscape. something easy, yet complex. something
-              boring, yet amusing. take a look at{" "}
-              <Link
-                isExternal
-                href={OPENSEA_COLLECTION_URL}
-                textDecoration="underline"
-                color="#2081e2"
-              >
-                OpenSea
-              </Link>{" "}
-              to see what has been minted so far
-            </Text>
-            <Text mb="2">
-              the art is generated on <Text as="i">the chain</Text> by sampling
-              data based on the state of <Text as="i">the chain</Text>, as well
-              as data about the minter (you). there are a total of{" "}
-              {COLOR_COUNT ** PART_COUNT} permutations ({COLOR_COUNT} colors and{" "}
-              {PART_COUNT} parts,{" "}
-              <Text as="i">
-                n<Text as="sup">r</Text>
-              </Text>
-              ), so the chance of your future Shaep being unique is{" "}
-              <Text as="em">good</Text>
-            </Text>
-            <Text mb="2">some things that are good to know:</Text>
-            <UnorderedList listStyleType="square" pl="4" mb="4">
-              <ListItem>
-                there will be a total of {maxSupply ?? "?"} Shaeps that can be
-                minted.
-              </ListItem>
-              <ListItem>
-                the cost of one Shaep will be {formattedPrice} $MATIC
-              </ListItem>
-              <ListItem>
-                the image to the left is just a showcase of what Shaeps can look
-                like. it&apos;s not a preview of how the minted Shaep will look
-              </ListItem>
-            </UnorderedList>
+            <InfoText maxSupply={maxSupply} price={price} />
           </Box>
           <Flex
             order={[0, 0, 1]}
