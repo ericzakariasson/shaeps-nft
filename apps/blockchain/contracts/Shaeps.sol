@@ -248,8 +248,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     function mint(address to) public payable {
         uint256 tokenId = _tokenIds.current();
         require(tokenId + 1 <= maxSupply, "Max supply minted");
-
-        require(msg.value >= price, "Not enough funds sent");
+        require(msg.value >= price, "Insufficient funds provided");
 
         _safeMint(to, tokenId);
         tokenIdHash[tokenId] = generateHash(to, block.timestamp, tokenId);
