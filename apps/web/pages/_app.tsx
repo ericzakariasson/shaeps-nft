@@ -1,7 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import "@fontsource/spectral";
 import type { AppProps } from "next/app";
-import { Provider, chain } from "wagmi";
+import { Provider, chain, Connector } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { providers } from "ethers";
@@ -9,7 +9,7 @@ import { providers } from "ethers";
 import "../index.css";
 import { theme } from "../theme";
 
-function getConnectors(chainId: number) {
+function getConnectors(chainId: number): Connector[] {
   const chains = [chain.rinkeby, chain.polygonTestnetMumbai];
   const injectedConnector = new InjectedConnector({ chains });
 
@@ -22,7 +22,7 @@ function getConnectors(chainId: number) {
   return [injectedConnector, walletConnectConnector];
 }
 
-function getProvider(chainId: number) {
+function getProvider(chainId: number): providers.BaseProvider {
   try {
     return new providers.AlchemyProvider(
       chainId,
