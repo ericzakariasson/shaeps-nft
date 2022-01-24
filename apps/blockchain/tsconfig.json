@@ -6,4 +6,5 @@
     "outDir": "dist"
   },
   "include": ["./scripts", "./test", "./typechain"],
+  "files": ["./hardhat.config.ts"]
 }
