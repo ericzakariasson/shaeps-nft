@@ -45,10 +45,21 @@ export function useShaepSupply() {
     }
   }, [mintedSupplyRequest.data]);
 
+  const isLoading =
+    mintedSupplyRequest.loading ||
+    maxSupplyRequest.loading ||
+    priceRequest.loading;
+
+  const allMinted =
+    typeof maxSupply === "number" &&
+    typeof mintedSupply === "number" &&
+    maxSupply === mintedSupply;
+
   return {
     maxSupply,
     mintedSupply,
     price,
-    allMinted: maxSupply - mintedSupply === 0,
+    allMinted,
+    isLoading,
   };
 }
