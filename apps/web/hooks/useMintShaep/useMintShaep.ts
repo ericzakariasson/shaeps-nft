@@ -17,7 +17,7 @@ enum MintErrorCode {
 }
 
 type UseMintShaepProps = {
-  price: number | null;
+  price: string | null;
 };
 
 export function useMintShaep({ price }: UseMintShaepProps) {

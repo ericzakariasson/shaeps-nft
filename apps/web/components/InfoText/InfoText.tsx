@@ -6,7 +6,7 @@ const COLOR_COUNT = 9;
 const PART_COUNT = 6;
 
 type InfoTextProps = {
-  price: number | null;
+  price: string | null;
   maxSupply: number | null;
 };
 

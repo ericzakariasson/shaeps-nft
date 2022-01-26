@@ -37,7 +37,7 @@ export function useShaepSupply() {
   }, [getMintedSupply, getMaxSupply, getPrice]);
 
   const maxSupply = maxSupplyRequest.data?.toNumber() ?? null;
-  const price = priceRequest.data?.toNumber() ?? null;
+  const price = priceRequest.data?.toString() ?? null;
 
   useEffect(() => {
     if (mintedSupplyRequest.data) {
