@@ -4,7 +4,6 @@ pragma solidity ^0.8.4;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -12,7 +11,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 import {Base64} from "./libraries/Base64.sol";
 
 /// @custom:security-contact security@shaeps.xyz
-contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
+contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
