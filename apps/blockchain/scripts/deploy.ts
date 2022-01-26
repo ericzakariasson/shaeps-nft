@@ -1,6 +1,10 @@
 import "dotenv/config";
 import { ethers, run } from "hardhat";
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function main() {
   const collector = process.env.COLLECTOR_ADDRESS;
 
@@ -18,6 +22,8 @@ async function main() {
   await shaeps.deployed();
 
   console.log("Shaeps deployed to:", shaeps.address);
+
+  await sleep(30_000);
 
   await run("verify:verify", {
     address: shaeps.address,
