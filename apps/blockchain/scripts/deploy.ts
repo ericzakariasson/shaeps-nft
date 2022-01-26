@@ -2,7 +2,7 @@ import "dotenv/config";
 import { ethers } from "hardhat";
 
 async function main() {
-  const collector = process.env.COLLCTOR_ADDRESS;
+  const collector = process.env.COLLECTOR_ADDRESS;
 
   if (!collector) {
     throw new Error("Missing collector");
