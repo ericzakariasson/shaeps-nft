@@ -19,6 +19,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     uint256 public constant maxSupply = 111;
     uint256 public constant price = 0.001 ether;
+    bool public paused = true;
 
     address payable public collector;
 
@@ -57,6 +58,20 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         address payable _collector
     ) ERC721(_name, _symbol) {
         collector = _collector;
+    }
+
+    /**
+     * @dev Triggers stopped state.
+     */
+    function pause() public onlyOwner {
+        paused = true;
+    }
+
+    /**
+     * @dev Returns to normal state.
+     */
+    function unpause() public onlyOwner {
+        paused = false;
     }
 
     function mintedSupply() public view returns (uint256) {
@@ -238,7 +253,6 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     /// @dev withdraw funds to collector address
     function withdraw() public onlyOwner {
-        // TODO: don't withdraw everything, store for airdrop
         Address.sendValue(collector, address(this).balance);
     }
 
@@ -246,6 +260,7 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
     /// @dev Mints NFT and generates metadata (including svg image) and store
     /// @param to address of the NFT receiver
     function mint(address to) public payable {
+        require(!paused, "Minting is paused");
         uint256 tokenId = _tokenIds.current();
         require(tokenId + 1 <= maxSupply, "Max supply minted");
         require(msg.value >= price, "Insufficient funds provided");
@@ -255,6 +270,22 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         _setTokenURI(tokenId, generateMetadata(tokenId));
         emit Minted(to, tokenId);
         _tokenIds.increment();
+    }
+
+    /// @custom:source https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol
+    function toUint8(bytes memory _bytes, uint256 _start)
+        internal
+        pure
+        returns (uint8)
+    {
+        require(_bytes.length >= _start + 1, "toUint8_outOfBounds");
+        uint8 tempUint;
+
+        assembly {
+            tempUint := mload(add(add(_bytes, 0x1), _start))
+        }
+
+        return tempUint;
     }
 
     // The following functions are overrides required by Solidity.
@@ -273,21 +304,5 @@ contract Shaeps is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
         returns (string memory)
     {
         return super.tokenURI(tokenId);
-    }
-
-    /// @custom:source https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol
-    function toUint8(bytes memory _bytes, uint256 _start)
-        internal
-        pure
-        returns (uint8)
-    {
-        require(_bytes.length >= _start + 1, "toUint8_outOfBounds");
-        uint8 tempUint;
-
-        assembly {
-            tempUint := mload(add(add(_bytes, 0x1), _start))
-        }
-
-        return tempUint;
     }
 }
