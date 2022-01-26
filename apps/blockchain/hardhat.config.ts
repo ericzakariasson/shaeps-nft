@@ -28,7 +28,14 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.POLYGONSCAN_API_KEY,
+    /**
+     * @description according to documentation, `apiKey` can be an object with various api keys.
+     * @see https://hardhat.org/plugins/nomiclabs-hardhat-etherscan.html#multiple-api-keys-and-alternative-block-explorers
+     */
+    apiKey: {
+      rinkeby: process.env.ETHERSCAN_API_KEY as string,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY as string,
+    } as unknown as string,
   },
 };
 
