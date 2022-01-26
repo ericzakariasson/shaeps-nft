@@ -1,5 +1,5 @@
 function getEnvStageUrl(nonProductionValue: string, productionValue: string) {
-  const isProduction = process.env.NEXT_PUBLIC_ENV_STAGE === "production";
+  const isProduction = process.env.NEXT_PUBLIC_STAGE === "production";
   return isProduction ? productionValue : nonProductionValue;
 }
 
