@@ -20,6 +20,7 @@ const config: HardhatUserConfig = {
     "polygon-mumbai": {
       url: process.env.POLYGON_MUMBAI_URL,
       accounts,
+      timeout: 10_000,
     },
   },
   gasReporter: {
