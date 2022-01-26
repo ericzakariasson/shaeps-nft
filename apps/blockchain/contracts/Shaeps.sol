@@ -16,7 +16,7 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
 
     uint256 public constant maxSupply = 111;
-    uint256 public constant price = 0.001 ether;
+    uint256 public price = 10 ether;
     bool public paused = true;
 
     address payable public collector;
@@ -70,6 +70,14 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
      */
     function unpause() public onlyOwner {
         paused = false;
+    }
+
+    /**
+     * @dev Sets price.
+     */
+    function setPrice(uint256 _price) public onlyOwner {
+        require(_price > 0);
+        price = _price;
     }
 
     function mintedSupply() public view returns (uint256) {
