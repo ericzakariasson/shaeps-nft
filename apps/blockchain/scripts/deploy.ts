@@ -14,10 +14,11 @@ async function main() {
 
   const name = "Shaeps";
   const symbol = "SHAEPS";
+  const paused = true;
 
   const Shaeps = await ethers.getContractFactory("Shaeps");
 
-  const shaeps = await Shaeps.deploy(name, symbol, collector);
+  const shaeps = await Shaeps.deploy(name, symbol, collector, paused);
 
   await shaeps.deployed();
 
@@ -27,7 +28,7 @@ async function main() {
 
   await run("verify:verify", {
     address: shaeps.address,
-    constructorArguments: [name, symbol, collector],
+    constructorArguments: [name, symbol, collector, paused],
   });
 }
 

@@ -9,15 +9,14 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import {Base64} from "./libraries/Base64.sol";
 
-/// @custom:security-contact security@shaeps.xyz
 contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
 
     uint256 public constant maxSupply = 111;
-    uint256 public price = 10 ether;
-    bool public paused = true;
+    uint256 public price = 1 ether;
+    bool public paused;
 
     address payable public collector;
 
@@ -53,9 +52,11 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     constructor(
         string memory _name,
         string memory _symbol,
-        address payable _collector
+        address payable _collector,
+        bool _paused
     ) ERC721(_name, _symbol) {
         collector = _collector;
+        paused = _paused;
     }
 
     /**
