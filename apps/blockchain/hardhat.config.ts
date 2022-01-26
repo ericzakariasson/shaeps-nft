@@ -14,11 +14,11 @@ const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     rinkeby: {
-      url: process.env.RINKEBY_URL || "",
+      url: process.env.RINKEBY_URL,
       accounts,
     },
-    mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+    "polygon-mumbai": {
+      url: process.env.POLYGON_MUMBAI_URL,
       accounts,
     },
   },
