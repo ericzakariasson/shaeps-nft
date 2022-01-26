@@ -1,3 +1,5 @@
 contract/types
 .env
 .env.*
+# Sentry
+.sentryclirc
