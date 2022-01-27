@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "yarn abi",
+    "postinstall": "yarn generate-contract-types",
     "abi": "cp ../blockchain/artifacts/contracts/Shaeps.sol/Shaeps.json ./contract/",
     "postabi": "yarn generate-contract-types",
     "generate-contract-types": "typechain --target ethers-v5 --out-dir ./contract/types ./contract/*.json"
