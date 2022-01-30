@@ -18,6 +18,8 @@ export const OPENSEA_ASSETS_BASE_URL = getEnvStageUrl(
   `${OPENSEA_BASE_URL}/assets/matic`
 );
 
-export const OPENSEA_COLLECTION_URL = `${OPENSEA_BASE_URL}/collection/${process.env.NEXT_PUBLIC_COLLECTION_NAME}`;
+export const OPENSEA_COLLECTION_URL = `${OPENSEA_BASE_URL}/collection/${
+  process.env.NEXT_PUBLIC_COLLECTION_NAME ?? "shaeps"
+}`;
 
 export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
