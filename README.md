@@ -1,5 +1,7 @@
 # shaeps
 
+Built on Plygon. Available on [shaeps.xyz](https://shaeps.xyz) and [test.shaeps.xyz](https://test.shaeps.xyz)
+
 ## smart contract
 
 EVM compatible smart contract developed in Solidity.
