@@ -10,7 +10,11 @@ import "../index.css";
 import { theme } from "../theme";
 
 function getConnectors(chainId: number): Connector[] {
-  const chains = [chain.rinkeby, chain.polygonTestnetMumbai];
+  const chains =
+    process.env.NEXT_PUBLIC_STAGE === "production"
+      ? [chain.polygonMainnet]
+      : [chain.polygonTestnetMumbai];
+
   const injectedConnector = new InjectedConnector({ chains });
 
   const walletConnectConnector = new WalletConnectConnector({
