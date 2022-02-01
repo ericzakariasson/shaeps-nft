@@ -37,6 +37,7 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
+    "run:local": "hardhat run scripts/run.ts --network hardhat",
     "deploy:rinkeby": "hardhat run scripts/deploy.ts --network rinkeby",
     "deploy:polygon-mumbai": "hardhat run scripts/deploy.ts --network polygon-mumbai",
     "test": "hardhat test"
