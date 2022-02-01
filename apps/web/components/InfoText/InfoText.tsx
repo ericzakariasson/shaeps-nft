@@ -11,7 +11,7 @@ type InfoTextProps = {
 };
 
 export function InfoText({ price, maxSupply }: InfoTextProps) {
-  const formattedPrice = ethers.utils.formatEther(price ?? 0);
+  const formattedPrice = price ? ethers.utils.formatEther(price) : "?";
 
   return (
     <>
