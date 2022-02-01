@@ -30,7 +30,12 @@ function Main() {
       <Head>
         <title>Shaeps — {formattedSupply} minted</title>
       </Head>
-      <Flex as="main" direction={["column", "column", "row"]} mb="8">
+      <Flex
+        as="main"
+        direction={["column", "column", "row"]}
+        mb="8"
+        alignItems={["unset", "unset", "flex-start"]}
+      >
         <Box
           border="1px"
           flex="1"
