@@ -1,6 +1,6 @@
 import { Button, Flex, FormControl, FormHelperText } from "@chakra-ui/react";
 import { FormEvent } from "react";
-import { useConnect } from "wagmi";
+import { useConnect, useNetwork } from "wagmi";
 
 type MintFormProps = {
   onMint: (amount: number) => void;
@@ -20,6 +20,12 @@ export function MintForm({ onMint, isLoading }: MintFormProps) {
     },
   ] = useConnect();
 
+  const [
+    {
+      data: { chain },
+    },
+  ] = useNetwork();
+
   return (
     <form onSubmit={handleSubmit}>
       <FormControl>
@@ -34,7 +40,7 @@ export function MintForm({ onMint, isLoading }: MintFormProps) {
             type="submit"
             px="8"
             py="4"
-            disabled={!connected}
+            disabled={!connected || chain?.unsupported}
             isLoading={isLoading}
           >
             mint
