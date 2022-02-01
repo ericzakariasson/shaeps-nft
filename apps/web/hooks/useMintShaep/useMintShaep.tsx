@@ -1,6 +1,10 @@
-import { useToast } from "@chakra-ui/react";
+import { Link, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAccount, useContract, useSigner } from "wagmi";
+import {
+  CONTRACT_ADDRESS,
+  OPENSEA_ASSETS_BASE_URL,
+} from "../../constants/urls";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
 import { Shaeps } from "../../contract/types/Shaeps";
 
@@ -13,7 +17,7 @@ export enum MintState {
 
 enum MintErrorCode {
   Rejected = 4001,
-  UnsufficientFunds = "INSUFFICIENT_FUNDS",
+  InsufficientFunds = "INSUFFICIENT_FUNDS",
 }
 
 type UseMintShaepProps = {
@@ -52,8 +56,14 @@ export function useMintShaep({ price }: UseMintShaepProps) {
       });
       await tx.wait();
       setMintState(MintState.Success);
+      const openSeaUrl = `${OPENSEA_ASSETS_BASE_URL}/${CONTRACT_ADDRESS}/1`;
       toast({
         title: "Your Shaep has been minted",
+        description: (
+          <Link isExternal href={openSeaUrl}>
+            View it on OpenSea
+          </Link>
+        ),
         status: "success",
       });
     } catch (error) {
@@ -65,9 +75,9 @@ export function useMintShaep({ price }: UseMintShaepProps) {
           });
           setMintState(MintState.Initial);
           break;
-        case MintErrorCode.UnsufficientFunds:
+        case MintErrorCode.InsufficientFunds:
           toast({
-            title: "Unsufficient funds",
+            title: "Insufficient funds",
             status: "warning",
           });
           setMintState(MintState.Initial);

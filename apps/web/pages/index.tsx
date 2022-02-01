@@ -1,7 +1,5 @@
 import { Box, Container, Flex, Heading, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import { useEffect } from "react";
-import { useAccount, useConnect, useNetwork } from "wagmi";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { InfoText } from "../components/InfoText";
