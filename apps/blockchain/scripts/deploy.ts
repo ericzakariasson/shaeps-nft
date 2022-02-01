@@ -14,7 +14,7 @@ async function main() {
 
   const name = "Shaeps";
   const symbol = "SHAEPS";
-  const paused = true;
+  const paused = false;
 
   const Shaeps = await ethers.getContractFactory("Shaeps");
 
