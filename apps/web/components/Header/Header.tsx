@@ -49,8 +49,7 @@ export function Header() {
 
   const [{ data: networkData }, switchNetwork] = useNetwork();
 
-  const isWalletConnect = connectData?.connector?.name === "WalletConnect";
-  const isUnsupported = networkData?.chain?.unsupported;
+  const isUnsupported = networkData?.chain?.unsupported ?? false;
   const isConnected = connectData.connected;
 
   const [supportedChain] = networkData.chains;
@@ -72,11 +71,7 @@ export function Header() {
             color="indianred"
             borderRadius="0"
             lineHeight="2"
-            onClick={
-              isWalletConnect
-                ? undefined
-                : () => switchNetwork(supportedChain.id)
-            }
+            onClick={() => switchNetwork?.(supportedChain.id)}
           >
             switch network to {supportedChain.name}
           </Button>
