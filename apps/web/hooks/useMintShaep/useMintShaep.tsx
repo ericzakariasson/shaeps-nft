@@ -59,7 +59,7 @@ export function useMintShaep({ price, onMintedEvent }: UseMintShaepProps) {
     if (accountData.address === to) {
       const openSeaUrl = `${OPENSEA_ASSETS_BASE_URL}/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`;
       toast({
-        title: "Your Shaep has been minted",
+        title: `Shaep #${tokenId.toNumber() + 1} has been minted`,
         description: (
           <Link isExternal href={openSeaUrl}>
             View it on OpenSea
