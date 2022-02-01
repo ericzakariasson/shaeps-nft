@@ -1,6 +1,14 @@
-import { Box, Flex, Heading, Spacer, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Spacer,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useAccount, useConnect } from "wagmi";
+import { chain, useAccount, useConnect, useNetwork } from "wagmi";
 import { ConnectAccount } from "../ConnectAccount";
 import { ConnectedAccount } from "../ConnectedAccount";
 
@@ -39,6 +47,14 @@ export function Header() {
     }
   }, [connectError, toast]);
 
+  const [{ data: networkData }, switchNetwork] = useNetwork();
+
+  const isWalletConnect = connectData?.connector?.name === "WalletConnect";
+  const isUnsupported = networkData?.chain?.unsupported;
+  const isConnected = connectData.connected;
+
+  const [supportedChain] = networkData.chains;
+
   return (
     <Box mb={["4", "4", "24"]}>
       <Flex mb="2">
@@ -48,13 +64,31 @@ export function Header() {
           </Heading>
         </Box>
         <Spacer />
-        {connectData.connected ? (
+        {isUnsupported && (
+          <Button
+            bg="none"
+            border="1px"
+            borderColor="indianred"
+            color="indianred"
+            borderRadius="0"
+            lineHeight="2"
+            onClick={
+              isWalletConnect
+                ? undefined
+                : () => switchNetwork(supportedChain.id)
+            }
+          >
+            switch network to {supportedChain.name}
+          </Button>
+        )}
+        {!isUnsupported && isConnected && (
           <ConnectedAccount
             address={accountData.address}
             ens={accountData.ens}
             onDisconnect={disconnect}
           />
-        ) : (
+        )}
+        {!isUnsupported && !isConnected && (
           <ConnectAccount
             connectors={connectData.connectors}
             onConnect={connect}

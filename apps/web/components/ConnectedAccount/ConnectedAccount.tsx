@@ -30,33 +30,6 @@ export function ConnectedAccount({
   address,
   onDisconnect,
 }: ConnectedAccountProps) {
-  const [
-    {
-      data: { connector },
-    },
-  ] = useConnect();
-  const [{ data: networkData }, switchNetwork] = useNetwork();
-
-  const isWalletConnect = connector?.name === "WalletConnect";
-
-  if (networkData.chain.unsupported) {
-    return (
-      <Button
-        bg="none"
-        border="1px"
-        borderColor="indianred"
-        color="indianred"
-        borderRadius="0"
-        lineHeight="2"
-        onClick={
-          isWalletConnect ? undefined : () => switchNetwork(chain.rinkeby.id)
-        }
-      >
-        switch network to {chain.rinkeby.name}
-      </Button>
-    );
-  }
-
   return (
     <Popover placement="top-end">
       <PopoverTrigger>
