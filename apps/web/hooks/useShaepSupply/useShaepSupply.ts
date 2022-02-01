@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useContractEvent, useProvider, useContractRead } from "wagmi";
+import { useContractRead, useProvider } from "wagmi";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
-import { Shaeps } from "../../contract/types/Shaeps";
 
 export function useShaepSupply() {
   const [mintedSupply, setMintedSupply] = useState<number | null>(null);
@@ -13,12 +12,6 @@ export function useShaepSupply() {
     contractInterface: Shaeps__factory.abi,
     signerOrProvider: provider,
   };
-
-  function handleMinted() {
-    setMintedSupply((supply) => supply + 1);
-  }
-
-  useContractEvent<Shaeps>(contractConfig, "Minted", handleMinted);
 
   const [mintedSupplyRequest, getMintedSupply] = useContractRead(
     contractConfig,
@@ -61,5 +54,6 @@ export function useShaepSupply() {
     price,
     allMinted,
     isLoading,
+    incrementMinted: () => setMintedSupply((supply) => supply + 1),
   };
 }
