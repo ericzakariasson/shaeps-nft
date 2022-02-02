@@ -5,9 +5,10 @@ import {
   Heading,
   Spacer,
   Text,
+  ToastId,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { chain, useAccount, useConnect, useNetwork } from "wagmi";
 import { ConnectAccount } from "../ConnectAccount";
 import { ConnectedAccount } from "../ConnectedAccount";
@@ -54,6 +55,40 @@ export function Header() {
 
   const [supportedChain] = networkData.chains;
 
+  const toastIdRef = useRef<ToastId | undefined>();
+
+  useEffect(() => {
+    if (isUnsupported && !toastIdRef.current) {
+      toastIdRef.current = toast({
+        title: "Wrong network",
+        description: (
+          <>
+            <Text mb="2">
+              the contract is only available at {supportedChain.name}
+            </Text>
+            <Button
+              bg="none"
+              border="1px"
+              borderColor="indianred"
+              color="indianred"
+              borderRadius="0"
+              lineHeight="2"
+              onClick={() => switchNetwork?.(supportedChain.id)}
+              title={`switch network to ${supportedChain.name}`}
+            >
+              switch network
+            </Button>
+          </>
+        ),
+        status: "warning",
+        duration: null,
+      });
+    }
+    if (!isUnsupported && toastIdRef.current) {
+      toast.close(toastIdRef.current);
+    }
+  }, [isUnsupported, supportedChain, toast, switchNetwork]);
+
   return (
     <Box mb={["4", "4", "24"]}>
       <Flex mb="2">
@@ -67,13 +102,14 @@ export function Header() {
           <Button
             bg="none"
             border="1px"
-            borderColor="indianred"
-            color="indianred"
+            borderColor="black"
+            color="black"
             borderRadius="0"
             lineHeight="2"
             onClick={() => switchNetwork?.(supportedChain.id)}
+            title={`switch network to ${supportedChain.name}`}
           >
-            switch network to {supportedChain.name}
+            switch network
           </Button>
         )}
         {!isUnsupported && isConnected && (

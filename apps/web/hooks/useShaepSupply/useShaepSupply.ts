@@ -26,7 +26,6 @@ export function useShaepSupply() {
   const maxSupply = maxSupplyRequest.data?.toNumber() ?? null;
   const price = priceRequest.data?.toString() ?? null;
 
-  console.log(totalSupplyRequest);
   useEffect(() => {
     if (totalSupplyRequest.data) {
       setTotalSupply(totalSupplyRequest.data.toNumber());
