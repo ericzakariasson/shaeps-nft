@@ -81,7 +81,7 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
         price = _price;
     }
 
-    function totalSupply() public view returns (uint256) {
+    function mintedSupply() public view returns (uint256) {
         return _tokenIds.current();
     }
 
@@ -247,13 +247,15 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
             );
     }
 
-    function generateHash(uint256 timestamp, uint256 tokenId)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function generateHash(
+        address to,
+        uint256 timestamp,
+        uint256 tokenId
+    ) internal pure returns (bytes memory) {
         return
-            abi.encodePacked(keccak256(abi.encodePacked(timestamp, tokenId)));
+            abi.encodePacked(
+                keccak256(abi.encodePacked(to, timestamp, tokenId))
+            );
     }
 
     /// @dev withdraw funds to collector address
@@ -265,14 +267,14 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
     /// @dev Mints NFT and generates metadata (including svg image) and store
     /// @param to address of the NFT receiver
     function mint(address to) public payable {
+        require(!paused, "Minting is paused");
         uint256 tokenId = _tokenIds.current();
         require(tokenId + 1 <= maxSupply, "Max supply minted");
         require(msg.value >= price, "Insufficient funds provided");
 
         _safeMint(to, tokenId);
-        tokenIdHash[tokenId] = generateHash(block.timestamp, tokenId);
-        string memory metadata = generateMetadata(tokenId);
-        _setTokenURI(tokenId, metadata);
+        tokenIdHash[tokenId] = generateHash(to, block.timestamp, tokenId);
+        _setTokenURI(tokenId, generateMetadata(tokenId));
         emit Minted(to, tokenId);
         _tokenIds.increment();
     }
