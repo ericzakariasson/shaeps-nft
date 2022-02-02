@@ -15,15 +15,15 @@ function Main() {
     interval: 1000,
   });
 
-  const { maxSupply, mintedSupply, price, allMinted, incrementMinted } =
+  const { maxSupply, totalSupply, price, allMinted, incrementTotalSupply } =
     useShaepSupply();
 
   const { mintState, onMint } = useMintShaep({
     price,
-    onMintedEvent: incrementMinted,
+    onMintedEvent: incrementTotalSupply,
   });
 
-  const formattedSupply = `${mintedSupply ?? "?"}/${maxSupply ?? "?"}`;
+  const formattedSupply = `${totalSupply ?? "?"}/${maxSupply ?? "?"}`;
 
   return (
     <>

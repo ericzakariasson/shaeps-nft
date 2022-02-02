@@ -3,7 +3,7 @@ import { useContractRead, useProvider } from "wagmi";
 import { Shaeps__factory } from "../../contract/types/factories/Shaeps__factory";
 
 export function useShaepSupply() {
-  const [mintedSupply, setMintedSupply] = useState<number | null>(null);
+  const [totalSupply, setTotalSupply] = useState<number | null>(null);
 
   const provider = useProvider();
 
@@ -13,9 +13,9 @@ export function useShaepSupply() {
     signerOrProvider: provider,
   };
 
-  const [mintedSupplyRequest, getMintedSupply] = useContractRead(
+  const [totalSupplyRequest, getTotalSupply] = useContractRead(
     contractConfig,
-    "mintedSupply"
+    "totalSupply"
   );
   const [maxSupplyRequest, getMaxSupply] = useContractRead(
     contractConfig,
@@ -23,37 +23,38 @@ export function useShaepSupply() {
   );
   const [priceRequest, getPrice] = useContractRead(contractConfig, "price");
 
-  useEffect(() => {
-    getMintedSupply();
-    getMaxSupply();
-    getPrice();
-  }, [getMintedSupply, getMaxSupply, getPrice]);
-
   const maxSupply = maxSupplyRequest.data?.toNumber() ?? null;
   const price = priceRequest.data?.toString() ?? null;
 
+  console.log(totalSupplyRequest);
   useEffect(() => {
-    if (mintedSupplyRequest.data) {
-      setMintedSupply(mintedSupplyRequest.data.toNumber());
+    if (totalSupplyRequest.data) {
+      setTotalSupply(totalSupplyRequest.data.toNumber());
     }
-  }, [mintedSupplyRequest.data]);
+  }, [totalSupplyRequest.data]);
 
   const isLoading =
-    mintedSupplyRequest.loading ||
+    totalSupplyRequest.loading ||
     maxSupplyRequest.loading ||
     priceRequest.loading;
 
+  useEffect(() => {
+    getTotalSupply();
+    getMaxSupply();
+    getPrice();
+  }, [getTotalSupply, getMaxSupply, getPrice]);
+
   const allMinted =
     typeof maxSupply === "number" &&
-    typeof mintedSupply === "number" &&
-    maxSupply === mintedSupply;
+    typeof totalSupply === "number" &&
+    maxSupply === totalSupply;
 
   return {
     maxSupply,
-    mintedSupply,
+    totalSupply,
     price,
     allMinted,
     isLoading,
-    incrementMinted: () => setMintedSupply((supply) => supply + 1),
+    incrementTotalSupply: () => setTotalSupply((supply) => supply + 1),
   };
 }
