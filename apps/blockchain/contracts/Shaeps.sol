@@ -81,7 +81,7 @@ contract Shaeps is ERC721, ERC721URIStorage, Ownable {
         price = _price;
     }
 
-    function mintedSupply() public view returns (uint256) {
+    function totalSupply() public view returns (uint256) {
         return _tokenIds.current();
     }
 
