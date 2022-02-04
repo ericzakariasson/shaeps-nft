@@ -1,14 +1,15 @@
 import {
-  Popover,
-  PopoverTrigger,
   Button,
+  Popover,
+  PopoverBody,
+  PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
-  PopoverCloseButton,
-  PopoverBody,
+  PopoverTrigger,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { useNetwork, chain, useProvider, useConnect } from "wagmi";
+import { Chain, useNetwork } from "wagmi";
 
 function formatAccountAddress(address: string) {
   return `${address.substring(0, 5)}...${address.substring(
@@ -23,13 +24,45 @@ type ConnectedAccountProps = {
     avatar: string | null;
   };
   onDisconnect: () => void;
+  onSwitchNetwork: (chain: Chain) => void;
 };
 
 export function ConnectedAccount({
   ens,
   address,
   onDisconnect,
+  onSwitchNetwork,
 }: ConnectedAccountProps) {
+  const toast = useToast({
+    isClosable: true,
+    position: "top",
+  });
+
+  async function handleSwitchNetwork() {
+    await switchNetwork?.(supportedChain.id);
+    onSwitchNetwork(supportedChain);
+  }
+
+  const [{ data: networkData }, switchNetwork] = useNetwork();
+  const isUnsupported = networkData?.chain?.unsupported;
+  const [supportedChain] = networkData.chains;
+
+  if (isUnsupported) {
+    return (
+      <Button
+        bg="none"
+        border="1px"
+        borderColor="indianred"
+        color="indianred"
+        borderRadius="0"
+        lineHeight="2"
+        onClick={handleSwitchNetwork}
+      >
+        switch network
+      </Button>
+    );
+  }
+
   return (
     <Popover placement="top-end">
       <PopoverTrigger>
