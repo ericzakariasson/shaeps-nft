@@ -1,6 +1,6 @@
-import { Link, useToast } from "@chakra-ui/react";
-import { BigNumber } from "ethers";
-import { useState } from "react";
+import { Link, useToast, Text } from "@chakra-ui/react";
+import { BigNumber, ethers } from "ethers";
+import { useEffect, useState } from "react";
 import {
   useAccount,
   useContract,
@@ -61,9 +61,23 @@ export function useMintShaep({ price, onMintedEvent }: UseMintShaepProps) {
       toast({
         title: `Shaep #${tokenId.toNumber() + 1} has been minted`,
         description: (
-          <Link isExternal href={openSeaUrl}>
-            View it on OpenSea
-          </Link>
+          <>
+            <Link
+              isExternal
+              href={openSeaUrl}
+              bg="black"
+              color="white"
+              py="2"
+              px="4"
+              mb="2"
+            >
+              View it on OpenSea
+            </Link>
+            <Text>
+              Note that it can take a minute or two for the token to show up
+              properly on OpenSea
+            </Text>
+          </>
         ),
         status: "success",
         duration: null,
