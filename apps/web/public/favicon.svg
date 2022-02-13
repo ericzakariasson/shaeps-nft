@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="222" height="222"><svg width="222" height="222" viewBox="0 0 222 222" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M28 124.75C28 178.184 71.5665 221.5 125 221.5V124.75H28Z" fill="#EB5757"></path>
-<rect width="125" height="125" fill="#2F80ED"></rect>
-<path d="M28.0003 125C28.0001 124.917 28 124.833 28 124.75C28 71.3165 71.3165 28 124.75 28C178.184 28 221.5 71.3165 221.5 124.75C221.5 124.833 221.5 124.917 221.5 125H28.0003Z" fill="#27AE60"></path>
-<path d="M125 221.5L125 125L173 125L173 221.5L125 221.5Z" fill="#EB5757"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="210" height="210"><svg width="210" height="210" viewBox="0 0 210 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M30.2822 117.641C30.2822 165.888 69.6199 205 117.867 205V117.641H30.2822Z" fill="#111111" stroke="#111111" stroke-width="10"></path>
+<rect x="5" y="5" width="112.867" height="112.867" fill="#111111" stroke="#111111" stroke-width="10"></rect>
+<path d="M30.2825 117.867C30.2823 117.792 30.2822 117.716 30.2822 117.641C30.2822 69.3941 69.3941 30.2822 117.641 30.2822C165.888 30.2822 205 69.3941 205 117.641C205 117.716 205 117.792 205 117.867H30.2825Z" fill="#111111" stroke="#111111" stroke-width="10"></path>
+<path d="M117.867 205L117.867 117.867L161.208 117.867L161.208 205L117.867 205Z" fill="#111111" stroke="#111111" stroke-width="10"></path>
 </svg><style>@media (prefers-color-scheme: light) { :root { filter: none; } }
 </style></svg>
