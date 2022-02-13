@@ -22,6 +22,11 @@ const config: HardhatUserConfig = {
       accounts,
       timeout: 30_000,
     },
+    polygon: {
+      url: process.env.POLYGON_URL,
+      accounts,
+      timeout: 30_000,
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

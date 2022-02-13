@@ -40,6 +40,7 @@
     "run:local": "hardhat run scripts/run.ts --network hardhat",
     "deploy:rinkeby": "hardhat run scripts/deploy.ts --network rinkeby",
     "deploy:mumbai": "hardhat run scripts/deploy.ts --network polygon-mumbai",
+    "deploy:polygon": "hardhat run scripts/deploy.ts --network polygon",
     "test": "hardhat test"
   }
 }
