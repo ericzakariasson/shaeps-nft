@@ -64,12 +64,13 @@ export function useMintShaep({ price, onMintedEvent }: UseMintShaepProps) {
           <>
             <Link
               isExternal
+              display="inline-block"
               href={openSeaUrl}
               bg="black"
               color="white"
               py="2"
               px="4"
-              mb="2"
+              my="2"
             >
               View it on OpenSea
             </Link>
